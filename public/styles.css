@@ -1,0 +1,218 @@
+/* Body styling */
+body {
+  font-family: "Georgia", sans-serif;
+  background-color: #f8f8f8;
+}
+
+/* Header styling */
+header {
+  padding: 20px;
+  text-align: center;
+  background-color: #f0f0f0;
+}
+
+/* Navigation bar styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #333;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.navbar ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style-type: none;
+}
+
+.navbar ul li {
+  margin-left: 20px;
+}
+
+.navbar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.navbar a:hover {
+  color: #007bff;
+}
+
+/* Welcome message styling */
+.welcome-message {
+  margin: 20px;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Calendar styling */
+.master_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 400px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 50px;
+}
+
+.container h2 {
+  margin-bottom: 20px;
+}
+
+/* Authentication form styles */
+.auth_form {
+  margin-bottom: 15px;
+}
+
+.auth_form label {
+  display: block;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.auth_form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.auth_form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.auth_form button:hover {
+  background-color: #45a049;
+}
+
+.error_message {
+  color: red;
+  margin-top: 15px;
+}
+
+.auth_form_links {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  color: #008cba;
+  text-decoration: none;
+}
+
+/* Calendar, mood, journal, goals styles */
+.calendar,
+.mood,
+.journal,
+.goals {
+  background-color: #fff;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Calendar days of the week styles */
+#calendar_days_of_the_week th {
+  text-align: center;
+}
+
+/* Calendar main styles */
+#calendar_main {
+  width: 100%;
+  max-width: 500px;
+}
+
+#calendar_main td {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+/* Days stylings */
+.day {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.day:hover {
+  background-color: lightslategray;
+}
+
+.empty {
+  background-color: #f8f8f8;
+}
+
+.selected-day {
+  background-color: #333;
+}
+
+/* general styles for select, input, textarea, buttons*/
+select,
+input,
+textarea,
+button {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-family: "Yu Gothic", sans-serif;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Submit button styles */
+.submitButton {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}

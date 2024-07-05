@@ -1,0 +1,10 @@
+[
+  {
+    "type": "sqlite",
+    "path": "c:\\Users\\user\\IdeaProjects\\iu_university_web_application\\my_database.db"
+  },
+  {
+    "type": "sqlite",
+    "path": "c:\\Users\\user\\IdeaProjects\\iu_university_web_application\\mood_data_logs.db"
+  }
+]

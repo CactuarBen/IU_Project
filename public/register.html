@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="shortcut icon" href="#" />
+  </head>
+  <body>
+    <!-- A simple register page-->
+    <header>
+      <nav class="navbar">
+        <h1>Psychological Well-being Tracker</h1>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="master_container">
+      <div class="container">
+        <!-- The registration form -->
+        <h2>Register</h2>
+        <div class="auth_form">
+          <label for="register_username">Username</label>
+          <input type="text" id="register_username" required />
+        </div>
+        <div class="auth_form">
+          <label for="register_password">Password</label>
+          <input type="password" id="register_password" required />
+        </div>
+        <div class="auth_form">
+          <label for="register_email">Email</label>
+          <input type="email" id="register_email" required />
+        </div>
+        <div class="auth_form">
+          <button onclick="register()">Register</button>
+        </div>
+        <div class="auth_form_links">
+          <!-- Link for logging in or resetting password -->
+          <a href="login.html">Already have an account? Login</a>
+          <a href="reset-password.html">Forgot Password?</a>
+        </div>
+        <div class="error_message" id="register_error"></div>
+      </div>
+    </div>
+    <script src="auth.js"></script>
+  </body>
+</html>

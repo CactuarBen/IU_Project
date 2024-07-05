@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="shortcut icon" href="#" />
+  </head>
+  <!-- A simple login page-->
+  <body>
+    <header>
+      <nav class="navbar">
+        <h1>Psychological Well-being Tracker</h1>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="register.html">Register</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div class="master_container">
+      <div class="container">
+        <!-- The login form -->
+        <h2>Login</h2>
+        <div class="auth_form">
+          <label for="login_email">Email</label>
+          <input type="email" id="login_email" required />
+        </div>
+        <div class="auth_form">
+          <label for="login_password">Password</label>
+          <input type="password" id="login_password" required />
+        </div>
+        <div class="auth_form">
+          <button onclick="login()">Login</button>
+        </div>
+        <!-- Links for the registration or resetting password -->
+        <div class="auth_form_links">
+          <a href="register.html">Don't have an account? Register</a>
+          <a href="reset-password.html">Forgot Password?</a>
+        </div>
+        <div class="error_message" id="login_error"></div>
+      </div>
+    </div>
+    <script src="auth.js"></script>
+  </body>
+</html>

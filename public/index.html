@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Psychological Well-being Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="shortcut icon" href="#" />
+  </head>
+  <body>
+    <header>
+      <!-- The website will always have a navigation bar, no matter what page it is on.
+       On the main page it will only have the Home link (index.html) and login/logout(login.html)-->
+      <nav class="navbar">
+        <h1>Psychological Well-being Tracker</h1>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a id="auth_button" href="login.html">Login</a></li>
+        </ul>
+      </nav>
+      <!--Display a quote with the current date, as well as the thinker who is credited for it-->
+      <p id="current_date"></p>
+      <p id="quote"></p>
+      <p id="author"></p>
+    </header>
+    <!--The welcome message that changes based if the user is logged in or not-->
+    <div id="welcomeMessage" class="welcome-message"></div>
+    <!--The calendar element that has two buttons in <month> element and days that are generated in script.js-->
+    <div class="calendar">
+      <div class="month">
+        <button onclick="prevMonth()"><span>&#10094;</span></button>
+        <span id="monthYear"></span>
+        <button onclick="nextMonth()"><span>&#10095;</span></button>
+      </div>
+      <!--The calendar itself-->
+      <table id="calendar_days_of_the_week">
+        <thead>
+          <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+          </tr>
+        </thead>
+        <tbody id="calendar_main"></tbody>
+      </table>
+      <!--These fields show the data that is saved in the database mood_data_logs.db for the logged in user -->
+      <div class="day_details">
+        <h2>Day Details</h2>
+        <div>
+          <h3>How you felt that day:</h3>
+          <p id="dayMood">No data</p>
+        </div>
+        <div>
+          <h3>What happened to you:</h3>
+          <p id="dayJournal">No data</p>
+        </div>
+        <div>
+          <h3>What goals you've achieved:</h3>
+          <p id="dayGoals">No data</p>
+        </div>
+      </div>
+    </div>
+    <!--The form that is supposed to be filled out by the user-->
+    <form id="wellbeing_form">
+      <div class="mood">
+        <!-- The list of moods -->
+        <h2>Mood Tracking</h2>
+        <select id="moodSelect" name="mood">
+          <option value="Happy">Happy (ハッピー)</option>
+          <option value="Sad">Sad (悲しい)</option>
+          <option value="Stressed">Stressed (ストレス)</option>
+          <option value="Relaxed">Relaxed (リラックス)</option>
+        </select>
+      </div>
+      <!-- The text area for journaling -->
+      <div class="journal">
+        <h2>Journal Entries</h2>
+        <textarea
+          id="journalEntry"
+          name="journalEntry"
+          rows="4"
+          cols="30"
+          placeholder="Write your journal entry here..."
+        ></textarea>
+      </div>
+      <!-- According to the Harvard university, there should be no more than 4 goals to fullfill in one day -->
+      <div class="goals">
+        <h2>Goal Setting</h2>
+        <input type="text" id="goal1" placeholder="Today Goal 1" />
+        <input type="text" id="goal2" placeholder="Today Goal 2" />
+        <input type="text" id="goal3" placeholder="Today Goal 3" />
+        <input type="text" id="goal4" placeholder="Today Goal 4" />
+      </div>
+      <button type="submit" class="submitButton">Submit</button>
+    </form>
+    <script src="script.js"></script>
+    <script>
+      //waits for the webpage to load and then returns the user name or a message that you are not logged in
+      document.addEventListener("DOMContentLoaded", function () {
+        let userId = localStorage.getItem("userId");
+        let authButton = document.getElementById("auth_button");
+        let welcomeMessage = document.getElementById("welcomeMessage");
+
+        async function loadProfile(userId) {
+          let response = await fetch(`/profile?userId=${userId}`);
+          if (response.ok) {
+            let profile = await response.json();
+            document.getElementById(
+              "welcomeMessage"
+            ).textContent = `Welcome back, ${profile.username}! How was your day? :D`;
+          }
+        }
+
+        if (userId) {
+          auth_button.textContent = "Logout";
+          auth_button.onclick = function () {
+            localStorage.removeItem("userId");
+            alert("Logged out successfully");
+            window.location.reload();
+          };
+          loadProfile(userId);
+        } else {
+          auth_button.textContent = "Login";
+          auth_button.href = "login.html";
+          welcomeMessage.innerHTML =
+            "Oops! Seems like I don't know you. Please <a href='login.html'>log in</a> so that I could take a closer look :)";
+        }
+      });
+    </script>
+  </body>
+</html>
