@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/nikolayvhs/iu_university_web_application.git"
+    "url": "https://github.com/CactuarBen/IU_Project.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/nikolayvhs/iu_university_web_application/issues"
+    "url": "https://github.com/CactuarBen/IU_Project/issues"
   },
-  "homepage": "https://gitlab.com/nikolayvhs/iu_university_web_application#readme",
+  "homepage": "https://github.com/CactuarBen/IU_Project#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
