@@ -63,14 +63,17 @@ async function resetPassword(event) {
   event.preventDefault(); // Prevent the form from submitting
 
   let urlParams = new URLSearchParams(window.location.search);
-  let token = urlParams.get("token");
-  let newPassword = document.getElementById("new_password").value;
-  let response = await fetch("/reset-password", {
+  let token = urlParams.get("reset");
+  let new_password = document.getElementById("new_password").value;
+  console.log(
+    `Resetting password with token: ${token} and new password: ${new_password}`
+  );
+  let response = await fetch("/new-password", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ token, newPassword }),
+    body: JSON.stringify({ token, new_password }),
   });
   let data = await response.json();
   let messageElement = document.getElementById("message");

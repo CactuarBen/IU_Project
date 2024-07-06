@@ -2,31 +2,43 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const path = require("path"); // library used to create and save the database
-const bodyParser = require("body-parser"); // library used to get information from an HTTP request
+const bodyParser = require("body-parser"); // library used to get information from an HTTP request, parsing middleware
 const sqlite3 = require("sqlite3").verbose(); // library used to create the database with user data
 const nodemailer = require("nodemailer"); // library for automation of password recovery
-const { MongoClient, ObjectId } = require("mongodb");
+const mongoose = require("mongoose");
 
 app.use(express.static(path.join(__dirname, "public"))); // creates an easy way to access webpages in the URL field
 app.use(bodyParser.json()); // used to help access the requests as req.body.*
 
 // Establish connection to the non-relational database in MongoDB with all the users
-let url =
-  "mongodb+srv://academicprogramming69:smGFluw5AW5Vozqj@moodtrackerproject.temdegk.mongodb.net/?retryWrites=true&w=majority&appName=MoodTrackerProject";
-let usersCollection;
-let client = new MongoClient(url);
+let MongoURL =
+  "mongodb+srv://academicprogramming69:smGFluw5AW5Vozqj@moodtrackerproject.temdegk.mongodb.net/moodTrackerDB?retryWrites=true&w=majority";
+mongoose
+  .connect(MongoURL)
+  .then(() => console.log("Connected to MongoDB using Mongoose!"))
+  .catch((error) => console.error("Error connecting to MongoDB:", error));
+// let usersCollection;
+// let client = new MongoClient(url);
 
-async function run_mongo_db() {
-  try {
-    await client.connect();
-    usersCollection = client.db("moodTrackerDB").collection("users");
-    console.log("Connected to MongoDB!");
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-  }
-}
+let userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  reset_password: { type: String, required: false },
+});
+let User = mongoose.model("User", userSchema);
 
-run_mongo_db();
+// async function run_mongo_db() {
+//   try {
+//     await client.connect();
+//     usersCollection = client.db("moodTrackerDB").collection("users");
+//     console.log("Connected to MongoDB!");
+//   } catch (error) {
+//     console.error("Error connecting to MongoDB:", error);
+//   }
+// }
+
+// run_mongo_db();
 
 // Create a new SQLite database or connect to an existing one
 let db = new sqlite3.Database("mood_data_logs.db");
@@ -46,14 +58,13 @@ db.run(`CREATE TABLE IF NOT EXISTS entries (
 app.post("/register", async (req, res) => {
   let { username, email, password } = req.body;
 
-  let existingUser = await usersCollection.findOne({ email });
+  let existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ error: "Email is already registered" });
   }
 
-  let newUser = { username, email, password };
-
-  await usersCollection.insertOne(newUser);
+  let newUser = new User({ username, email, password });
+  await newUser.save();
   res.json({ message: "User registered" });
 });
 
@@ -61,16 +72,8 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   let { email, password } = req.body;
 
-  let user = await usersCollection.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ error: "Email or password is incorrect" });
-  }
-
-  let isPasswordValid = false;
-  if (password == user.password) {
-    isPasswordValid = true;
-  }
-  if (!isPasswordValid) {
+  let user = await User.findOne({ email });
+  if (!user || user.password !== password) {
     return res.status(400).json({ error: "Email or password is incorrect" });
   }
 
@@ -89,22 +92,26 @@ let transporter = nodemailer.createTransport({
 // Forgotten password reset
 app.post("/reset-password", async (req, res) => {
   let { email } = req.body;
-  let user = await usersCollection.findOne({ email });
+  let user = await User.findOne({ email });
   if (!user) return res.json({ error: "Email not found" });
 
-  let resetPassword = "resetPassword";
+  let reset_password = "reset_password";
 
-  await usersCollection.updateOne(
-    { _id: user._id },
-    { $set: { resetPassword: resetPassword } }
-  );
+  // await User.updateOne(
+  //   { _id: user._id },
+  //   { $set: { reset_password: reset_password } }
+  // );
+
+  // Update the user log
+  user.reset_password = reset_password;
+  await user.save();
 
   let mailOptions = {
     to: email,
     from: "psychologycalendarwebsite@gmail.com",
     subject: "Resetting your password",
     text: `Dear Subscriber, here is your link to reset the password. Click on the link to recover your account!
-        http://${req.headers.host}/new-password.html?reset=${resetPassword}. Please ignore this email if you didn't ask for password recovery`,
+        http://${req.headers.host}/new-password.html?reset=${reset_password}. Please ignore this email if you didn't ask for password recovery`,
   };
 
   transporter.sendMail(mailOptions, (err) => {
@@ -118,18 +125,26 @@ app.post("/reset-password", async (req, res) => {
 
 // Reset password
 app.post("/new-password", async (req, res) => {
-  let { reset: reset_password, newPassword } = req.body;
-  let user = await usersCollection.findOne({
-    resetPassword: reset_password,
-  });
+  let { token, new_password } = req.body;
+  console.log(`Received new password request with token: ${token}`);
+
+  // Find the user with the right reset token
+  let user = await User.findOne({ reset_password: token });
+
   if (!user) {
     return res.json({ error: "Password reset string is invalid" });
   }
 
-  await usersCollection.updateOne(
-    { _id: user._id },
-    { $set: { password: newPassword } }
-  );
+  console.log(`Found user for token: ${token}`);
+  // Update the user's password
+  user.password = new_password;
+  // Clear the reset token
+  user.reset_password = undefined;
+  // Save the updated user document
+  await user.save();
+  console.log(`Password updated for user ${user.email}`);
+  console.log(user.password);
+  console.log(user.reset_password);
 
   res.json({ message: "Password reset successfully" });
 });
@@ -137,11 +152,11 @@ app.post("/new-password", async (req, res) => {
 // Retrieving user data
 app.get("/profile", async (req, res) => {
   let userId = req.query.userId;
-  if (!ObjectId.isValid(userId)) {
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ error: "Invalid user ID format" });
   }
 
-  let user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+  let user = await User.findById(userId);
   if (!user) {
     return res.status(404).json({ error: "User not found" });
   }
@@ -154,7 +169,7 @@ app.post("/submit-form", async (req, res) => {
   try {
     let { mood, journalEntry, goals, date, userId } = req.body;
 
-    if (!ObjectId.isValid(userId)) {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ error: "Invalid user ID format" });
     }
 
