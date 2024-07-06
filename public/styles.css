@@ -124,10 +124,25 @@ header {
 }
 
 /* Calendar, mood, journal, goals styles */
+.master_calendar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+/* Each section should take up an equal amount of space */
+.calendar,
+.day_details,
+.wellbeing_form {
+  flex: 1 1 300px; /* Adjust the minimum width as necessary */
+  margin: 10px;
+}
+
 .calendar,
 .mood,
 .journal,
-.goals {
+.goals,
+.day_details {
   background-color: #fff;
   margin: 20px;
   padding: 20px;
@@ -215,4 +230,13 @@ button:hover {
 
 .submitButton:hover {
   background-color: #0056b3;
+}
+
+/* Ensure that the elements stack vertically on smaller screens */
+@media (max-width: 900px) {
+  .calendar,
+  .day_details,
+  .wellbeing_form {
+    flex: 1 1 100%;
+  }
 }
