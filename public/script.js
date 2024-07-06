@@ -174,9 +174,9 @@ function resetEntryFields() {
 // A function that waits for the form submission
 async function submitForm(event) {
   event.preventDefault();
-  const form = document.getElementById("wellbeingForm");
-  const formData = new FormData(form);
-  const formObject = Object.fromEntries(formData.entries());
+  let form = document.getElementById("wellbeingForm");
+  let formData = new FormData(form);
+  let formObject = Object.fromEntries(formData.entries());
 
   // Converting goals from separate inputs to an array
   formObject.goals = [
