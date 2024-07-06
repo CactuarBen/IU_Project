@@ -43,7 +43,7 @@ async function register() {
 // Function for sending a password reset email
 async function requestPasswordReset() {
   let email = document.getElementById("reset_email").value;
-  let response = await fetch("/forgot-password", {
+  let response = await fetch("/reset-password", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
