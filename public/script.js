@@ -174,20 +174,24 @@ function resetEntryFields() {
 // A function that waits for the form submission
 async function submitForm(event) {
   event.preventDefault();
-  let form = document.getElementById("wellbeingForm");
-  let formData = new FormData(form);
-  let formObject = Object.fromEntries(formData.entries());
+  const form = document.getElementById("wellbeingForm");
+  const formData = new FormData(form);
+  const formObject = Object.fromEntries(formData.entries());
 
-  formObject.goals = [];
-  for (let i = 1; i <= 4; i++) {
-    formObject.goals.push(document.getElementById(`goal${i}`).value);
-  }
+  // Converting goals from separate inputs to an array
+  formObject.goals = [
+    form.goal1.value,
+    form.goal2.value,
+    form.goal3.value,
+    form.goal4.value,
+  ];
 
   let selectedDay = document.querySelector(".day.selected-day").textContent;
   formObject.date = `${currentYear}-${String(currentMonth + 1).padStart(
     2,
     "0"
   )}-${String(selectedDay).padStart(2, "0")}`;
+
   formObject.userId = localStorage.getItem("userId");
 
   // debug tool if the data is empty and the db isn't working
@@ -286,9 +290,7 @@ function updateAuthButton() {
 }
 
 // Submits the form upon pressing the button
-document
-  .getElementById("wellbeing_form")
-  .addEventListener("submit", submitForm);
+document.getElementById("wellbeingForm").addEventListener("submit", submitForm);
 
 // Log out function
 function logout() {

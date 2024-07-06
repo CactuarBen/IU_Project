@@ -26,28 +26,30 @@
     <!--The welcome message that changes based if the user is logged in or not-->
     <div id="welcomeMessage" class="welcome-message"></div>
     <!--The calendar element that has two buttons in <month> element and days that are generated in script.js-->
-    <div class="calendar">
-      <div class="month">
-        <button onclick="prevMonth()"><span>&#10094;</span></button>
-        <span id="monthYear"></span>
-        <button onclick="nextMonth()"><span>&#10095;</span></button>
+    <div class="master_calendar">
+      <div class="calendar">
+        <div class="month">
+          <button onclick="prevMonth()"><span>&#10094;</span></button>
+          <span id="monthYear"></span>
+          <button onclick="nextMonth()"><span>&#10095;</span></button>
+        </div>
+        <!--The calendar itself-->
+        <table id="calendar_days_of_the_week">
+          <thead>
+            <tr>
+              <th>Sun</th>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+            </tr>
+          </thead>
+          <tbody id="calendar_main"></tbody>
+        </table>
+        <!--These fields show the data that is saved in the database mood_data_logs.db for the logged in user -->
       </div>
-      <!--The calendar itself-->
-      <table id="calendar_days_of_the_week">
-        <thead>
-          <tr>
-            <th>Sun</th>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-          </tr>
-        </thead>
-        <tbody id="calendar_main"></tbody>
-      </table>
-      <!--These fields show the data that is saved in the database mood_data_logs.db for the logged in user -->
       <div class="day_details">
         <h2>Day Details</h2>
         <div>
@@ -63,40 +65,42 @@
           <p id="dayGoals">No data</p>
         </div>
       </div>
+      <!--The form that is supposed to be filled out by the user-->
+      <div class="wellbeing_form">
+        <form id="wellbeingForm">
+          <div class="mood">
+            <!-- The list of moods -->
+            <h2>Mood Tracking</h2>
+            <select id="moodSelect" name="mood">
+              <option value="Happy">Happy (ハッピー)</option>
+              <option value="Sad">Sad (悲しい)</option>
+              <option value="Stressed">Stressed (ストレス)</option>
+              <option value="Relaxed">Relaxed (リラックス)</option>
+            </select>
+          </div>
+          <!-- The text area for journaling -->
+          <div class="journal">
+            <h2>Journal Entries</h2>
+            <textarea
+              id="journalEntry"
+              name="journalEntry"
+              rows="4"
+              cols="30"
+              placeholder="Write your journal entry here..."
+            ></textarea>
+          </div>
+          <!-- According to the Harvard university, there should be no more than 4 goals to fullfill in one day -->
+          <div class="goals">
+            <h2>Goal Setting</h2>
+            <input type="text" id="goal1" placeholder="Today Goal 1" />
+            <input type="text" id="goal2" placeholder="Today Goal 2" />
+            <input type="text" id="goal3" placeholder="Today Goal 3" />
+            <input type="text" id="goal4" placeholder="Today Goal 4" />
+          </div>
+          <button type="submit" class="submitButton">Submit</button>
+        </form>
+      </div>
     </div>
-    <!--The form that is supposed to be filled out by the user-->
-    <form id="wellbeing_form">
-      <div class="mood">
-        <!-- The list of moods -->
-        <h2>Mood Tracking</h2>
-        <select id="moodSelect" name="mood">
-          <option value="Happy">Happy (ハッピー)</option>
-          <option value="Sad">Sad (悲しい)</option>
-          <option value="Stressed">Stressed (ストレス)</option>
-          <option value="Relaxed">Relaxed (リラックス)</option>
-        </select>
-      </div>
-      <!-- The text area for journaling -->
-      <div class="journal">
-        <h2>Journal Entries</h2>
-        <textarea
-          id="journalEntry"
-          name="journalEntry"
-          rows="4"
-          cols="30"
-          placeholder="Write your journal entry here..."
-        ></textarea>
-      </div>
-      <!-- According to the Harvard university, there should be no more than 4 goals to fullfill in one day -->
-      <div class="goals">
-        <h2>Goal Setting</h2>
-        <input type="text" id="goal1" placeholder="Today Goal 1" />
-        <input type="text" id="goal2" placeholder="Today Goal 2" />
-        <input type="text" id="goal3" placeholder="Today Goal 3" />
-        <input type="text" id="goal4" placeholder="Today Goal 4" />
-      </div>
-      <button type="submit" class="submitButton">Submit</button>
-    </form>
     <script src="script.js"></script>
     <script>
       //waits for the webpage to load and then returns the user name or a message that you are not logged in
