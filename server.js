@@ -45,6 +45,12 @@ db.run(`CREATE TABLE IF NOT EXISTS entries (
 // User registration
 app.post("/register", async (req, res) => {
   let { username, email, password } = req.body;
+
+  let existingUser = await usersCollection.findOne({ email });
+  if (existingUser) {
+    return res.status(400).json({ error: "Email is already registered" });
+  }
+
   let newUser = { username, email, password };
 
   await usersCollection.insertOne(newUser);
@@ -56,9 +62,19 @@ app.post("/login", async (req, res) => {
   let { email, password } = req.body;
 
   let user = await usersCollection.findOne({ email });
-  if (!user) return res.json({ error: "User not found" });
-  if (!password == user.password) return res.json({ error: "Wrong password" });
-  res.json({ message: "Login successful", userId: user._id.toString() });
+  if (!user) {
+    return res.status(400).json({ error: "Email or password is incorrect" });
+  }
+
+  let isPasswordValid = false;
+  if (password == user.password) {
+    isPasswordValid = true;
+  }
+  if (!isPasswordValid) {
+    return res.status(400).json({ error: "Email or password is incorrect" });
+  }
+
+  res.json({ message: "Login successful", userId: user._id });
 });
 
 // Nodemailer setup for recovering passwords
@@ -121,33 +137,55 @@ app.post("/new-password", async (req, res) => {
 // Retrieving user data
 app.get("/profile", async (req, res) => {
   let userId = req.query.userId;
+  if (!ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: "Invalid user ID format" });
+  }
+
   let user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-  if (!user) return res.json({ error: "User not found" });
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
   res.json({ username: user.username });
-  //console.log({ username: user.username });
 });
 
 // Handle form submissions
-app.post("/submit_form", async (req, res) => {
-  let { userId, date, mood, journalEntry, goals = [] } = req.body;
+app.post("/submit-form", async (req, res) => {
+  try {
+    let { mood, journalEntry, goals, date, userId } = req.body;
 
-  console.log("Received data:", { userId, date, mood, journalEntry, goals });
-
-  db.run(
-    `INSERT INTO entries (userId, date, mood, journalEntry, goal)
-     VALUES (?, ?, ?, ?, ?)
-     ON CONFLICT(userId, date)
-     DO UPDATE SET mood=excluded.mood, journalEntry=excluded.journalEntry, goal=excluded.goal`,
-    [userId, date, mood, journalEntry, goals.join(";")],
-    (err) => {
-      if (err) {
-        console.error("Error inserting data into database:", err);
-        res.json({ error: "Internal server error" });
-      } else {
-        res.json({ message: "Data submitted successfully" });
-      }
+    if (!ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: "Invalid user ID format" });
     }
-  );
+
+    let newLog = {
+      userId,
+      date,
+      mood,
+      journalEntry,
+      goal: goals.join(", "),
+    };
+
+    db.run(
+      `INSERT INTO entries (userId, date, mood, journalEntry, goal) VALUES (?, ?, ?, ?, ?)`,
+      [
+        newLog.userId,
+        newLog.date,
+        newLog.mood,
+        newLog.journalEntry,
+        newLog.goal,
+      ],
+      function (err) {
+        if (err) {
+          return res.status(500).json({ error: "Error saving log" });
+        }
+        res.json({ message: "Log saved successfully", logId: this.lastID });
+      }
+    );
+  } catch (error) {
+    console.error("Error saving log:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // Retrieving user data for a specific month or specific date
