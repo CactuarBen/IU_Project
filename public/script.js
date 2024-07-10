@@ -29,12 +29,25 @@ function displayCurrentDate() {
 }
 
 // Gets an inspirational quote from an API
-function fetchQuote() {
-  fetch("https://stoic.tekloon.net/stoic-quote")
-    .then((response) => response.json())
-    .then(({ quote, author }) => {
-      document.getElementById("quote").textContent = `"${quote}"`;
-      document.getElementById("author").textContent = `- ${author}`;
+async function fetchQuote() {
+  console.log("Fetching quote...");
+  await fetch("/proxy-quote")
+    .then((response) => {
+      console.log("Response received:", response);
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json();
+    })
+    .then(({ data }) => {
+      console.log("Quote data received:", data);
+      const { quote, author } = data;
+      if (quote && author) {
+        document.getElementById("quote").textContent = `"${quote}"`;
+        document.getElementById("author").textContent = `- ${author}`;
+      } else {
+        console.error("Quote or author is missing in the response data:", data);
+      }
     })
     .catch((error) => console.error("Error fetching quote:", error));
 }

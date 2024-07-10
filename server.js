@@ -6,9 +6,43 @@ const bodyParser = require("body-parser"); // library used to get information fr
 const sqlite3 = require("sqlite3").verbose(); // library used to create the database with user data
 const nodemailer = require("nodemailer"); // library for automation of password recovery
 const mongoose = require("mongoose");
+const cors = require("cors");
+const fetch = require("node-fetch");
 
 app.use(express.static(path.join(__dirname, "public"))); // creates an easy way to access webpages in the URL field
 app.use(bodyParser.json()); // used to help access the requests as req.body.*
+
+// First, apply the cors middleware with default settings
+app.use(cors());
+
+// Then, define your custom CORS headers middleware
+function setCorsHeaders(req, res, next) {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://stoic.tekloon.net/stoic-quote"
+  ); // Specify a particular origin
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+}
+
+// Apply the custom middleware after cors
+app.use(setCorsHeaders);
+
+app.get("/proxy-quote", async (req, res) => {
+  console.log("Received request for /proxy-quote");
+  let response = await fetch("https://stoic.tekloon.net/stoic-quote");
+  console.log("Fetched quote from remote server:", response.status);
+  if (!response.ok) {
+    throw new Error("Network response was not ok " + response.statusText);
+  }
+  let data = await response.json();
+  console.log("Quote data received from remote server:", data);
+  res.json(data);
+});
 
 // Establish connection to the non-relational database in MongoDB with all the users
 let MongoURL =
@@ -17,17 +51,10 @@ mongoose
   .connect(MongoURL)
   .then(() => console.log("Connected to MongoDB using Mongoose!"))
   .catch((error) => console.error("Error connecting to MongoDB:", error));
+
+// Before Mongoose
 // let usersCollection;
 // let client = new MongoClient(url);
-
-let userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  reset_password: { type: String, required: false },
-});
-let User = mongoose.model("User", userSchema);
-
 // async function run_mongo_db() {
 //   try {
 //     await client.connect();
@@ -39,6 +66,15 @@ let User = mongoose.model("User", userSchema);
 // }
 
 // run_mongo_db();
+
+// Creates a userSchema for Mongoose
+let userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  reset_password: { type: String, required: false },
+});
+let User = mongoose.model("User", userSchema);
 
 // Create a new SQLite database or connect to an existing one
 let db = new sqlite3.Database("mood_data_logs.db");
@@ -57,13 +93,14 @@ db.run(`CREATE TABLE IF NOT EXISTS entries (
 // User registration
 app.post("/register", async (req, res) => {
   let { username, email, password } = req.body;
+  let hashed_password = await bcrypt.hash(password, 10);
 
   let existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ error: "Email is already registered" });
   }
 
-  let newUser = new User({ username, email, password });
+  let newUser = new User({ username, email, password: hashed_password });
   await newUser.save();
   res.json({ message: "User registered" });
 });
@@ -73,7 +110,7 @@ app.post("/login", async (req, res) => {
   let { email, password } = req.body;
 
   let user = await User.findOne({ email });
-  if (!user || user.password !== password) {
+  if (!user || !bcrypt.compare(password, user.password)) {
     return res.status(400).json({ error: "Email or password is incorrect" });
   }
 
@@ -126,6 +163,7 @@ app.post("/reset-password", async (req, res) => {
 // Reset password
 app.post("/new-password", async (req, res) => {
   let { token, new_password } = req.body;
+  let hashed_password = await bcrypt.hash(new_password, 10);
   console.log(`Received new password request with token: ${token}`);
 
   // Find the user with the right reset token
@@ -137,7 +175,7 @@ app.post("/new-password", async (req, res) => {
 
   console.log(`Found user for token: ${token}`);
   // Update the user's password
-  user.password = new_password;
+  user.password = hashed_password;
   // Clear the reset token
   user.reset_password = undefined;
   // Save the updated user document
