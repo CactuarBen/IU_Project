@@ -32,6 +32,8 @@ function setCorsHeaders(req, res, next) {
 // Apply the custom middleware after cors
 app.use(setCorsHeaders);
 
+// Fixes the CORS issue, fetches the quote with correct headers
+// Then the script.js fetches the data from the backend
 app.get("/proxy-quote", async (req, res) => {
   console.log("Received request for /proxy-quote");
   let response = await fetch("https://stoic.tekloon.net/stoic-quote");
