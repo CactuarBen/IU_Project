@@ -1,11 +1,21 @@
 /* Body styling */
+html,
 body {
   font-family: "Georgia", sans-serif;
   background-color: #f8f8f8;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 /* Header styling */
 header {
+  width: 100%;
   padding: 20px;
   text-align: center;
   background-color: #f0f0f0;
@@ -57,13 +67,12 @@ header {
 }
 
 /* Calendar styling */
-.master_container {
+/* .master_container {
   display: flex;
-  align-items: center;
   justify-content: center;
-}
+} */
 
-.container {
+/* .container {
   width: 400px;
   padding: 20px;
   background-color: #fff;
@@ -71,11 +80,11 @@ header {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   margin-top: 50px;
-}
+} */
 
-.container h2 {
+/* .container h2 {
   margin-bottom: 20px;
-}
+} */
 
 /* Authentication form styles */
 .auth_form {
@@ -127,30 +136,44 @@ header {
 .master_calendar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-/* Each section should take up an equal amount of space */
+.month{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mood,
+.journal,
+.goals{
+  flex: 1 1 100px;
+  margin: 0px 10px 10px 0px
+}
+
 .calendar,
 .day_details,
 .wellbeing_form {
-  flex: 1 1 300px; /* Adjust the minimum width as necessary */
-  margin: 10px;
-}
-
-.calendar,
-.mood,
-.journal,
-.goals,
-.day_details {
+  flex: 1 1 100%;
+  max-width: 600px; 
   background-color: #fff;
-  margin: 20px;
   padding: 20px;
+  margin: 10px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 /* Calendar days of the week styles */
+#calendar_days_of_the_week {
+  width:100%;
+  height: auto;
+}
+
 #calendar_days_of_the_week th {
   text-align: center;
 }
@@ -158,16 +181,15 @@ header {
 /* Calendar main styles */
 #calendar_main {
   width: 100%;
-  max-width: 500px;
+  table-layout: fixed; 
 }
 
-#calendar_main td {
-  width: 50px;
-  height: 50px;
+#calendar_main td, 
+#calendar_main th {
   text-align: center;
   vertical-align: middle;
+  padding: 10px;
   border: 1px solid #ccc;
-  cursor: pointer;
 }
 
 /* Days stylings */
@@ -202,9 +224,15 @@ button {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: 100%;
   box-sizing: border-box;
   font-family: "Yu Gothic", sans-serif;
 }
+
+#month_button{
+  width: 100px;
+}
+
 
 button {
   background-color: #007bff;
@@ -232,11 +260,75 @@ button:hover {
   background-color: #0056b3;
 }
 
-/* Ensure that the elements stack vertically on smaller screens */
-@media (max-width: 900px) {
+@media (max-width: 1900px) {
+  .navbar h1 {
+    font-size: 20px;
+  }
+
+  .navbar ul li a {
+    font-size: 14px;
+  }
+
   .calendar,
   .day_details,
   .wellbeing_form {
     flex: 1 1 100%;
+    max-width: 100%;
+    margin: 10px 0;
+  }
+
+  .calendar,
+  .mood,
+  .journal,
+  .goals {
+    padding: 10px;
+  }
+
+  #calendar_main td {
+    width: 40px; 
+    height: 40px;
+    font-size: 0.8rem;
+  }
+
+  button,
+  select,
+  input,
+  textarea {
+    font-size: 0.9rem; 
+    padding: 8px;
+  }
+
+  .submitButton {
+    font-size: 16px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 375px) {
+  .navbar h1 {
+    font-size: 18px;
+  }
+
+  .navbar ul li a {
+    font-size: 12px;
+  }
+
+  #calendar_main td {
+    width: 30px; 
+    height: 30px;
+    font-size: 0.7rem;
+  }
+
+  button,
+  select,
+  input,
+  textarea {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+
+  .submitButton {
+    font-size: 14px;
+    padding: 8px;
   }
 }

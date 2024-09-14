@@ -48,7 +48,7 @@ app.get("/proxy-quote", async (req, res) => {
 
 // Establish connection to the non-relational database in MongoDB with all the users
 let MongoURL =
-  "mongodb+srv://academicprogramming69:smGFluw5AW5Vozqj@moodtrackerproject.temdegk.mongodb.net/moodTrackerDB?retryWrites=true&w=majority";
+  "mongodb+srv://academicprogramming69:smGFluw5AW5Vozqj@moodtrackerproject.temdegk.mongodb.net/";
 mongoose
   .connect(MongoURL)
   .then(() => console.log("Connected to MongoDB using Mongoose!"))
