@@ -120,7 +120,7 @@ function generateCalendarHTML() {
   }
   html += "</tbody>";
 
-  document.getElementById("monthYear").textContent = `${new Date(
+  document.getElementById("month_year").textContent = `${new Date(
     currentYear,
     currentMonth
   ).toLocaleString("en-US", { month: "long" })} ${currentYear}`;
@@ -187,7 +187,7 @@ function resetEntryFields() {
 // A function that waits for the form submission
 async function submitForm(event) {
   event.preventDefault();
-  let form = document.getElementById("wellbeingForm");
+  let form = document.getElementById("wellbeing_form");
   let formData = new FormData(form);
   let formObject = Object.fromEntries(formData.entries());
 
@@ -303,7 +303,7 @@ function updateAuthButton() {
 }
 
 // Submits the form upon pressing the button
-document.getElementById("wellbeingForm").addEventListener("submit", submitForm);
+document.getElementById("wellbeing_form").addEventListener("submit", submitForm);
 
 // Log out function
 function logout() {
