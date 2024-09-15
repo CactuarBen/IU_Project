@@ -18,11 +18,53 @@ async function login() {
   }
 }
 
+// Function for checking the password for the security rules
+function checkPassword(password) {
+  let errors = [];
+
+  // Checks the password for the specific length
+  if (password.length < 8) {
+    errors.push("Password must be at least 8 characters long.");
+  }
+
+  // Checks for the presence of an uppercase letter
+  if (!/[A-Z]/.test(password)) {
+    errors.push("Password must contain at least one uppercase letter.");
+  }
+
+  // Checks for the presence of a lowercase letter
+  if (!/[a-z]/.test(password)) {
+    errors.push("Password must contain at least one lowercase letter.");
+  }
+
+  // Check for the presence of a number
+  if (!/[0-9]/.test(password)) {
+    errors.push("Password must contain at least one number.");
+  }
+
+  return errors;
+}
+
 // Function for registration
 async function register() {
   let username = document.getElementById("register_username").value;
   let email = document.getElementById("register_email").value;
   let password = document.getElementById("register_password").value;
+
+  // Checks the password for following the rules specified above
+  let passwordErrors = checkPassword(password);
+  if (passwordErrors.length > 0) {
+    let errorMessages = "";
+    
+    // Starts every error line from a new line
+    for (let error of passwordErrors) {
+      errorMessages += error + "<br>";
+    }
+    document.getElementById("register_error").innerHTML = errorMessages;
+    return; // Stops if the password doesn't fulfill criteria
+  }
+  
+  // Sends the response with the data to the server, so that it gets saved in MongoDB
   let response = await fetch("/register", {
     method: "POST",
     headers: {
@@ -30,6 +72,7 @@ async function register() {
     },
     body: JSON.stringify({ username, email, password }),
   });
+
   let data = await response.json();
   if (response.ok) {
     window.location.href = "login.html";
@@ -60,11 +103,25 @@ async function requestPasswordReset() {
 
 // Function that resets the password
 async function resetPassword(event) {
-  event.preventDefault(); // Prevent the form from submitting
+  event.preventDefault(); // Prevent the form from automatically submitting
 
   let urlParams = new URLSearchParams(window.location.search);
   let token = urlParams.get("reset");
   let new_password = document.getElementById("new_password").value;
+
+  // Checks the password for following the rules specified above
+  let passwordErrors = checkPassword(new_password);
+  if (passwordErrors.length > 0) {
+    let errorMessages = "";
+    
+    // Starts every error line from a new line
+    for (let error of passwordErrors) {
+      errorMessages += error + "<br>";
+    }
+    document.getElementById("register_error").innerHTML = errorMessages;
+    return; // Stops if the password doesn't fulfill criteria
+    }
+
   console.log(
     `Resetting password with token: ${token} and new password: ${new_password}`
   );
