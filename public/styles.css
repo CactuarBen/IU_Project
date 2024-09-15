@@ -16,7 +16,6 @@ body {
 /* Header styling */
 header {
   width: 100%;
-  padding: 20px;
   text-align: center;
   background-color: #f0f0f0;
 }
@@ -26,13 +25,29 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1900px;
   padding: 10px 20px;
   color: white;
-  border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: #333;
+  margin: 0 auto;
+  border-radius: 5px;
 }
 
+/* Disables the features unique to links*/
+h1 > a:visited,
+h1 > a{
+  text-decoration: none;
+  color: white;
+}
+
+a,
+a:visited{
+  text-decoration: none;
+  color:#007bff;
+}
+
+/* further configures the navbar elements */
 .navbar h1 {
   margin: 0;
   font-size: 24px;
@@ -65,26 +80,6 @@ header {
   padding: 10px;
   text-align: center;
 }
-
-/* Calendar styling */
-/* .master_container {
-  display: flex;
-  justify-content: center;
-} */
-
-/* .container {
-  width: 400px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  margin-top: 50px;
-} */
-
-/* .container h2 {
-  margin-bottom: 20px;
-} */
 
 /* Authentication form styles */
 .auth_form {
@@ -132,6 +127,16 @@ header {
   text-decoration: none;
 }
 
+.auth_form_links{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.auth_form_links, div{
+  margin:5px;
+}
+
 /* Calendar, mood, journal, goals styles */
 .master_calendar {
   display: flex;
@@ -140,6 +145,11 @@ header {
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
+}
+
+/* Calendar styling */
+#month_year{
+  text-align: center;
 }
 
 .month{
@@ -153,6 +163,17 @@ header {
 .goals{
   flex: 1 1 100px;
   margin: 0px 10px 10px 0px
+}
+
+/* necessary styling to make the text stay within the box */
+/* tested with the longer inputs */
+#dayMood,
+#dayJournal,
+#dayGoals{
+  word-wrap: break-word;
+  white-space: normal; 
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .calendar,
@@ -193,9 +214,12 @@ header {
 }
 
 /* Days stylings */
-.day {
+.day,
+.empty {
   border: 1px solid #ccc;
   padding: 10px;
+  width:70px;
+  height:50px;
 }
 
 .days {
@@ -212,7 +236,7 @@ header {
 }
 
 .selected-day {
-  background-color: #333;
+  background-color: #746c6c;
 }
 
 /* general styles for select, input, textarea, buttons*/
@@ -231,8 +255,9 @@ button {
 
 #month_button{
   width: 100px;
+  height: 100%;
+  margin-bottom: 0;
 }
-
 
 button {
   background-color: #007bff;
@@ -260,13 +285,13 @@ button:hover {
   background-color: #0056b3;
 }
 
+.footer_text{
+  text-align: center;
+}
+
 @media (max-width: 1900px) {
   .navbar h1 {
     font-size: 20px;
-  }
-
-  .navbar ul li a {
-    font-size: 14px;
   }
 
   .calendar,
@@ -285,8 +310,8 @@ button:hover {
   }
 
   #calendar_main td {
-    width: 40px; 
-    height: 40px;
+    width: 60px; 
+    height: 60px;
     font-size: 0.8rem;
   }
 
