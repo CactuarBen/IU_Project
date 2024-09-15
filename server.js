@@ -5,6 +5,8 @@ const path = require("path"); // library used to create and save the database
 const bodyParser = require("body-parser"); // library used to get information from an HTTP request, parsing middleware
 const sqlite3 = require("sqlite3").verbose(); // library used to create the database with user data
 const nodemailer = require("nodemailer"); // library for automation of password recovery
+const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const fetch = require("node-fetch");
@@ -48,7 +50,7 @@ app.get("/proxy-quote", async (req, res) => {
 
 // Establish connection to the non-relational database in MongoDB with all the users
 let MongoURL =
-  "mongodb+srv://academicprogramming69:smGFluw5AW5Vozqj@moodtrackerproject.temdegk.mongodb.net/";
+  "mongodb+srv://academicprogramming69:smGFluw5AW5Vozqj@moodtrackerproject.temdegk.mongodb.net/moodTrackerDB?retryWrites=true&w=majority";
 mongoose
   .connect(MongoURL)
   .then(() => console.log("Connected to MongoDB using Mongoose!"))
@@ -134,12 +136,7 @@ app.post("/reset-password", async (req, res) => {
   let user = await User.findOne({ email });
   if (!user) return res.json({ error: "Email not found" });
 
-  let reset_password = "reset_password";
-
-  // await User.updateOne(
-  //   { _id: user._id },
-  //   { $set: { reset_password: reset_password } }
-  // );
+  let reset_password = crypto.randomBytes(32).toString("hex");
 
   // Update the user log
   user.reset_password = reset_password;
@@ -221,20 +218,55 @@ app.post("/submit-form", async (req, res) => {
       goal: goals.join(", "),
     };
 
-    db.run(
-      `INSERT INTO entries (userId, date, mood, journalEntry, goal) VALUES (?, ?, ?, ?, ?)`,
-      [
-        newLog.userId,
-        newLog.date,
-        newLog.mood,
-        newLog.journalEntry,
-        newLog.goal,
-      ],
-      function (err) {
+    // A new feature that checks if an entry for the given date exists
+    // Then it rewrites the existing date for the userId
+    db.get(
+      `SELECT * FROM entries WHERE userId = ? AND date = ?`,
+      [userId, date],
+      (err, row) => {
         if (err) {
-          return res.status(500).json({ error: "Error saving log" });
+          return res.status(500).json({ error: "Error querying the database" });
         }
-        res.json({ message: "Log saved successfully", logId: this.lastID });
+
+        // if entry exists, update it
+        if (row) {
+          db.run(
+            `UPDATE entries 
+             SET mood = ?, journalEntry = ?, goal = ?
+             WHERE userId = ? AND date = ?`,
+            [
+              newLog.mood,
+              newLog.journalEntry,
+              newLog.goal,
+              newLog.userId,
+              newLog.date,
+            ],
+            function (err) {
+              if (err) {
+                return res.status(500).json({ error: "Error updating log" });
+              }
+              res.json({ message: "Log updated successfully", logId: row.id });
+            }
+          );
+        } else {
+          // Entry does not exist, insert a new one
+          db.run(
+            `INSERT INTO entries (userId, date, mood, journalEntry, goal) VALUES (?, ?, ?, ?, ?)`,
+            [
+              newLog.userId,
+              newLog.date,
+              newLog.mood,
+              newLog.journalEntry,
+              newLog.goal,
+            ],
+            function (err) {
+              if (err) {
+                return res.status(500).json({ error: "Error saving log" });
+              }
+              res.json({ message: "Log saved successfully", logId: this.lastID });
+            }
+          );
+        }
       }
     );
   } catch (error) {
