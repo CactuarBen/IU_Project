@@ -29,6 +29,7 @@ Tools: Microsoft Visual Studio Code, Git, and GitHub.
 
 5) Clone the repository into your chosen folder using `git clone` via the IDE terminal
 6) Configure Environment: Before running the server, ensure you've configured any required credentials:
+
 MongoDB: Update the MongoDB connection string in the server.js file:
 
 line 53: `let MongoURL = "<mongodb-address>";`
