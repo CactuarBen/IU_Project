@@ -56,21 +56,6 @@ mongoose
   .then(() => console.log("Connected to MongoDB using Mongoose!"))
   .catch((error) => console.error("Error connecting to MongoDB:", error));
 
-// Before Mongoose
-// let usersCollection;
-// let client = new MongoClient(url);
-// async function run_mongo_db() {
-//   try {
-//     await client.connect();
-//     usersCollection = client.db("moodTrackerDB").collection("users");
-//     console.log("Connected to MongoDB!");
-//   } catch (error) {
-//     console.error("Error connecting to MongoDB:", error);
-//   }
-// }
-
-// run_mongo_db();
-
 // Creates a userSchema for Mongoose
 let userSchema = new mongoose.Schema({
   username: { type: String, required: true },
@@ -111,14 +96,22 @@ app.post("/register", async (req, res) => {
 
 // User login
 app.post("/login", async (req, res) => {
-  let { email, password } = req.body;
+    let { email, password } = req.body;
 
-  let user = await User.findOne({ email });
-  if (!user || !bcrypt.compare(password, user.password)) {
-    return res.status(400).json({ error: "Email or password is incorrect" });
-  }
+    // Check if the user exists in the database
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: "Email or password is incorrect" });
+    }
 
-  res.json({ message: "Login successful", userId: user._id });
+    // Compare the current password with the stored hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "Email or password is incorrect" });
+    }
+
+    // Password matches - send a success response with the user's ID
+    res.json({ message: "Login successful", userId: user._id });
 });
 
 // Nodemailer setup for recovering passwords
