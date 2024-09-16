@@ -24,6 +24,6 @@ Tools: Microsoft Visual Studio Code, Git, and GitHub.
 # Installation guide
 1) Install Node.js from the website: https://nodejs.org/en (you can check the version in the IDE terminal by writing "node -v"
 2) Initialise Node.js using the command "npm init -y"
-3) Install dependecies necessary for the server to run: npm install express body-parser sqlite3 nodemailer crypto bcrypt mongoose cors node-fetch
+3) Install dependecies necessary for the server to run: `npm install express body-parser sqlite3 nodemailer crypto bcrypt mongoose cors node-fetch`
 4) 
 
