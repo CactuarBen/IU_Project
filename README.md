@@ -22,8 +22,19 @@ API: Stoic Quotes API for fetching quotes to display in the front end.
 Tools: Microsoft Visual Studio Code, Git, and GitHub.
 
 # Installation guide
-1) Install Node.js from the website: https://nodejs.org/en (you can check the version in the IDE terminal by writing "node -v"
-2) Initialise Node.js using the command "npm init -y"
-3) Install dependecies necessary for the server to run: `npm install express body-parser sqlite3 nodemailer crypto bcrypt mongoose cors node-fetch`
-4) 
+1) Install Node.js from the website: https://nodejs.org/en (you can check the version in the IDE terminal by writing `node -v`)
+2) Initialise Node.js using the command `npm init -y`
+3) Install dependecies necessary for the server to run:
+`npm install express body-parser sqlite3 nodemailer crypto bcrypt mongoose cors node-fetch`
+
+5) Clone the repository into your chosen folder using `git clone` via the IDE terminal
+6) Configure Environment: Before running the server, ensure you've configured any required credentials:
+MongoDB: Update the MongoDB connection string in the server.js file:
+  line 53: `let MongoURL = "<mongodb-address>";`
+Nodemailer: Replace the email credentials with your own:
+  line 143: `user: "<recovery-email@gmail.com>"`
+7) `cd` into the folder, where the `server.js` file is
+8) Write the command `node server.js`
+9) The terminal will notify you that the web application is running at the `http://localhost:3000` address
+10) Paste `http://localhost:3000` into any web browser search bar
 
