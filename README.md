@@ -31,10 +31,11 @@ Tools: Microsoft Visual Studio Code, Git, and GitHub.
 6) Configure Environment: Before running the server, ensure you've configured any required credentials:
 MongoDB: Update the MongoDB connection string in the server.js file:
   line 53: `let MongoURL = "<mongodb-address>";`
+
 Nodemailer: Replace the email credentials with your own:
   line 143: `user: "<recovery-email@gmail.com>"`
-7) `cd` into the folder, where the `server.js` file is
-8) Write the command `node server.js`
-9) The terminal will notify you that the web application is running at the `http://localhost:3000` address
-10) Paste `http://localhost:3000` into any web browser search bar
+8) `cd` into the folder, where the `server.js` file is
+9) Write the command `node server.js`
+10) The terminal will notify you that the web application is running at the `http://localhost:3000` address
+11) Paste `http://localhost:3000` into any web browser search bar
 
