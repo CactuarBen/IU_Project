@@ -2,20 +2,31 @@
 async function login() {
   let email = document.getElementById("login_email").value;
   let password = document.getElementById("login_password").value;
-  let response = await fetch("/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
-  let data = await response.json();
-  if (response.ok) {
-    localStorage.setItem("userId", data.userId);
-    window.location.href = "index.html";
-  } else {
-    document.getElementById("login_error").textContent = data.error;
-  }
+
+    let response = await fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    console.log(email, password);
+    let data = await response.json();
+    console.log(data);
+
+    if (response.ok) {
+      if (data.userId) {
+        localStorage.setItem("userId", data.userId);
+        window.location.href = "index.html";
+      } else {
+        // response is ok but no userId is returned
+        document.getElementById("login_error").textContent = "Authentication failed. Please check your credentials.";
+      }
+    } else {
+      // incorrect email/password
+      document.getElementById("login_error").textContent = data.error || "An error occurred during login.";
+    }
 }
 
 // Function for checking the password for the security rules
