@@ -22,6 +22,9 @@ API: Stoic Quotes API for fetching quotes to display in the front end.
 Tools: Microsoft Visual Studio Code, Git, and GitHub.
 
 # Installation guide
+This is a brief installation guide that will allow you to run the calendar locally, without depending on anyone, having it fully private. 
+It requires basic knowledge of using the IDE terminal and shell commands.
+
 1) Install Node.js from the website: https://nodejs.org/en (you can check the version in the IDE terminal by writing `node -v`)
 2) Initialise Node.js using the command `npm init -y`
 3) Install dependecies necessary for the server to run:
@@ -30,11 +33,11 @@ Tools: Microsoft Visual Studio Code, Git, and GitHub.
 5) Clone the repository into your chosen folder using `git clone` via the IDE terminal
 6) Configure Environment: Before running the server, ensure you've configured any required credentials:
 
-MongoDB: Update the MongoDB connection string in the server.js file:
+MongoDB: Update the MongoDB connection string in the server.js file, if you want to use your own database for the user accounts:
 
 line 53: `let MongoURL = "<mongodb-address>";`
 
-Nodemailer: Replace the email credentials with your own:
+Nodemailer: Replace the email credentials with your own, so that you have access to the mail that resets passwords:
   
 line 143: `user: "<recovery-email@gmail.com>"`
 
