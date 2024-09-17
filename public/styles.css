@@ -285,10 +285,12 @@ button:hover {
   background-color: #0056b3;
 }
 
+/* footer styling */
 .footer_text{
   text-align: center;
 }
 
+/* Slightly increased font sizes and flexbox rules for displays between 1900px and 375px wide*/
 @media (max-width: 1900px) {
   .navbar h1 {
     font-size: 20px;
@@ -329,6 +331,7 @@ button:hover {
   }
 }
 
+/* mostly font-related changes for the smaller iPhone SE display */
 @media (max-width: 375px) {
   .navbar h1 {
     font-size: 18px;
