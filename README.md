@@ -46,3 +46,11 @@ line 143: `user: "<recovery-email@gmail.com>"`
 10) The terminal will notify you that the web application is running at the `http://localhost:3000` address
 11) Paste `http://localhost:3000` into any web browser search bar
 
+# Troubleshooting
+In case of an error connected with `process.dlopen(module, path._*)`, it is necessary to run the following commands
+1) `rm -rf node_modules/`
+2) `npm update`
+
+The issue is associated with the fact that the node_modules are to be ignored by the gitignore file, but since it is a university project, i left the files within it.
+4) 
+
